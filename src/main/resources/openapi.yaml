@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   description: Kotlin/Ktor API for sample songs, videos, artists, categories, and media items.
 servers:
-  - url: https://your-live-server-url
-    description: Replace with your deployed Render URL
+  - url: /
+    description: Same server as this Swagger page
   - url: http://localhost:8080
     description: Local development
 tags:
