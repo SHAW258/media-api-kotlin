@@ -24,11 +24,15 @@ GET https://media-api-kotlin.onrender.com/song
 | --- | --- | --- |
 | GET | `/` | API running message |
 | GET | `/api/health` | Health check |
+| GET | `/docs` | Swagger UI |
+| GET | `/openapi.yaml` | OpenAPI specification |
 
 Example:
 
 ```text
 GET {BASE_URL}/api/health
+GET {BASE_URL}/docs
+GET {BASE_URL}/openapi.yaml
 ```
 
 ## All Media

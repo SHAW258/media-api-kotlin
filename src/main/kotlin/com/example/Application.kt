@@ -26,6 +26,33 @@ private val json = Json {
     prettyPrint = true
 }
 
+private const val SWAGGER_UI_HTML = """
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Media API Swagger</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+    <style>
+        body { margin: 0; background: #f7f8fb; }
+        .topbar { display: none; }
+    </style>
+</head>
+<body>
+<div id="swagger-ui"></div>
+<script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+<script>
+    window.onload = function () {
+        window.ui = SwaggerUIBundle({
+            url: "/openapi.yaml",
+            dom_id: "#swagger-ui"
+        });
+    };
+</script>
+</body>
+</html>
+"""
+
 @Serializable
 data class MediaResponse(
     val success: Boolean,
@@ -141,6 +168,14 @@ fun main() {
         routing {
             get("/") {
                 call.respond(mapOf("message" to "Media API is running"))
+            }
+
+            get("/docs") {
+                call.respondText(SWAGGER_UI_HTML, ContentType.Text.Html)
+            }
+
+            get("/openapi.yaml") {
+                call.respondText(loadResourceText("openapi.yaml"), ContentType.parse("application/yaml"))
             }
 
             get("/api/health") {
@@ -299,10 +334,14 @@ fun main() {
 }
 
 private fun loadMediaJson(): String {
-    val resourceStream = Thread.currentThread().contextClassLoader.getResourceAsStream("media-1000.json")
+    return loadResourceText("media-1000.json")
+}
+
+private fun loadResourceText(fileName: String): String {
+    val resourceStream = Thread.currentThread().contextClassLoader.getResourceAsStream(fileName)
     if (resourceStream != null) {
         return resourceStream.bufferedReader().use { it.readText() }
     }
 
-    return File("src/main/resources/media-1000.json").readText()
+    return File("src/main/resources/$fileName").readText()
 }

@@ -40,11 +40,20 @@ Push this folder to GitHub, then deploy it as a Docker web service on Render or 
 
 ### Render
 
-1. Create a GitHub repository and push this project.
-2. Go to Render > New > Web Service.
-3. Connect your GitHub repo.
-4. Set Language to `Docker`.
-5. Deploy.
+1. Go to Render > New > Web Service.
+2. Connect this GitHub repo: `https://github.com/SHAW258/media-api-kotlin`
+3. Set Runtime/Language to `Docker`.
+4. Deploy.
+
+This repo also includes `render.yaml`, so Render can deploy it as a Blueprint.
+
+After deployment, replace `{BASE_URL}` with your Render URL:
+
+```text
+{BASE_URL}/api/health
+{BASE_URL}/docs
+{BASE_URL}/openapi.yaml
+```
 
 ### Railway
 
@@ -62,6 +71,20 @@ http://localhost:8080
 ## Endpoint List
 
 See [ENDPOINTS.md](ENDPOINTS.md) for all available API routes and examples.
+
+## Swagger
+
+When the server is running, Swagger UI is available at:
+
+```text
+http://localhost:8080/docs
+```
+
+The OpenAPI spec is available at:
+
+```text
+http://localhost:8080/openapi.yaml
+```
 
 ## Postman URLs
 

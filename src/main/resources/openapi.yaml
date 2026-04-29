@@ -1,0 +1,382 @@
+openapi: 3.0.3
+info:
+  title: Media API Kotlin
+  version: 1.0.0
+  description: Kotlin/Ktor API for sample songs, videos, artists, categories, and media items.
+servers:
+  - url: https://your-live-server-url
+    description: Replace with your deployed Render URL
+  - url: http://localhost:8080
+    description: Local development
+tags:
+  - name: Health
+  - name: Media
+  - name: Songs
+  - name: Artists
+  - name: Videos
+  - name: Categories
+paths:
+  /:
+    get:
+      tags: [Health]
+      summary: API running message
+      responses:
+        "200":
+          description: API running message
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      responses:
+        "200":
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /api/media:
+    get:
+      tags: [Media]
+      summary: Get all media items
+      responses:
+        "200":
+          description: All media items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaResponse"
+  /api/media/{id}:
+    get:
+      tags: [Media]
+      summary: Get one media item by ID
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "200":
+          description: Media item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaItem"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/media/echo:
+    post:
+      tags: [Media]
+      summary: Echo a JSON request body
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200":
+          description: Echoed JSON body
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /song:
+    get:
+      tags: [Songs]
+      summary: Get all songs
+      responses:
+        "200":
+          description: All audio items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaListResponse"
+  /song/{id}:
+    get:
+      tags: [Songs]
+      summary: Get one song by media ID
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "200":
+          description: Song item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaItem"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /song/artistg:
+    get:
+      tags: [Artists]
+      summary: Get all artists
+      description: Original artist-list endpoint.
+      responses:
+        "200":
+          description: Artist list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtistsResponse"
+  /song/artists:
+    get:
+      tags: [Artists]
+      summary: Get all artists
+      description: Clean alias for /song/artistg.
+      responses:
+        "200":
+          description: Artist list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtistsResponse"
+  /artist/{id}:
+    get:
+      tags: [Artists]
+      summary: Get artist details and songs
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "200":
+          description: Artist details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtistDetailResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /videos:
+    get:
+      tags: [Videos]
+      summary: Get all videos
+      responses:
+        "200":
+          description: All video items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaListResponse"
+  /video/{id}:
+    get:
+      tags: [Videos]
+      summary: Get one video by media ID
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "200":
+          description: Video item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaItem"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/categories:
+    get:
+      tags: [Categories]
+      summary: Get all categories with totals
+      responses:
+        "200":
+          description: Category list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoriesResponse"
+  /api/categories/{category}:
+    get:
+      tags: [Categories]
+      summary: Get media items in one category
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema:
+            type: string
+          example: Education
+      responses:
+        "200":
+          description: Category media items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryMediaResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  responses:
+    NotFound:
+      description: Item not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MessageResponse"
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    MediaResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        total:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaItem"
+    MediaListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        total:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaItem"
+    MediaItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Sample Video 1
+        description:
+          type: string
+        mediaType:
+          type: string
+          enum: [audio, video]
+        format:
+          type: string
+          example: mp4
+        category:
+          type: string
+          example: Education
+        duration:
+          type: string
+          example: "00:05"
+        thumbnailUrl:
+          type: string
+          format: uri
+        mediaUrl:
+          type: string
+          format: uri
+        artist:
+          type: string
+          nullable: true
+          example: Demo Artist
+        views:
+          type: integer
+        likes:
+          type: integer
+        isPremium:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    ArtistSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        totalSongs:
+          type: integer
+    ArtistsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        total:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArtistSummary"
+    ArtistDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        totalSongs:
+          type: integer
+        songs:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaItem"
+    ArtistDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/ArtistDetail"
+    CategorySummary:
+      type: object
+      properties:
+        name:
+          type: string
+        total:
+          type: integer
+    CategoriesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        total:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategorySummary"
+    CategoryMediaResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        category:
+          type: string
+        total:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaItem"
