@@ -59,6 +59,10 @@ Base URL:
 http://localhost:8080
 ```
 
+## Endpoint List
+
+See [ENDPOINTS.md](ENDPOINTS.md) for all available API routes and examples.
+
 ## Postman URLs
 
 ```text
