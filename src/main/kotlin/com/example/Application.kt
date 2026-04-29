@@ -299,9 +299,9 @@ fun main() {
 }
 
 private fun loadMediaJson(): String {
-    val resource = Thread.currentThread().contextClassLoader.getResource("media-1000.json")
-    if (resource != null) {
-        return File(resource.toURI()).readText()
+    val resourceStream = Thread.currentThread().contextClassLoader.getResourceAsStream("media-1000.json")
+    if (resourceStream != null) {
+        return resourceStream.bufferedReader().use { it.readText() }
     }
 
     return File("src/main/resources/media-1000.json").readText()
