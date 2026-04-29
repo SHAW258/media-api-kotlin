@@ -1,0 +1,14 @@
+.gradle/
+build/
+.idea/
+*.iml
+*.log
+cloudflared*.exe
+tunnel-*.log
+cloudflared-*.log
+tools/
+__pycache__/
+
+# OS files
+desktop.ini
+Thumbs.db
